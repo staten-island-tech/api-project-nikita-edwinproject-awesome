@@ -6,6 +6,8 @@ import { DOMSelectors } from "./dom-selectors";
 
 /* const URL = `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.draw}5`; */ // draws 5 cards from preexisting deck
 
+// NOTE TO SELF create seperate functions that process fetching of api, and inserting into html. That way function that fetches api can be reused
+
 async function showCards(url) {
   try {
     const response = await fetch(url);
