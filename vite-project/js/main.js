@@ -6,9 +6,7 @@ import { DOMSelectors } from "./dom-selectors";
 
 /* const URL = `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.draw}5`; */ // draws 5 cards from preexisting deck
 
-const URL = `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.draw}2`;
-
-async function getData(url) {
+async function showCards(url) {
   try {
     const response = await fetch(url);
     const data = await response.json(); // turns response in json we can use
@@ -17,7 +15,7 @@ async function getData(url) {
       console.log(card.image);
       DOMSelectors.main.insertAdjacentHTML(
         "beforeend",
-        `<img src="${card.image}" alt="">`
+        `<img src="${card.image}" alt="${card.value} of ${card.suit}">`
       );
     });
   } catch (err) {
@@ -25,7 +23,7 @@ async function getData(url) {
   }
 }
 
-getData(URL);
+showCards(`${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.draw}2`);
 
 // function greet(name) {
 //   const greetPromise = new Promise(function (resolve, reject) {
