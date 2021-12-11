@@ -24,22 +24,23 @@ async function draw(number) {
     );
     const data = await response.json(); // turns response in json we can use
     console.log(data);
-    data.cards.forEach((card) => {
+    data.cards.forEach(async (card) => {
       console.log(card.image);
       DOMSelectors.main.insertAdjacentHTML(
         "beforeend",
         `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card">`
       );
-      await fetch(
-        `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.drawnCards}`
+      await fetchApi(
+        `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.addToDrawnCards}${card.code}`
+      );
+      await fetchApi(
+        `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDrawnCards}`
       );
     });
   } catch (err) {
     console.log(err);
   }
 }
-
-draw(2);
 
 function shuffle() {
   if (DOMSelectors.main.children.length > 0) {
@@ -59,6 +60,8 @@ DOMSelectors.drawBtn.addEventListener("click", function (event) {
   event.preventDefault();
   draw(1);
 });
+
+draw(2);
 
 // function greet(name) {
 //   const greetPromise = new Promise(function (resolve, reject) {
