@@ -61,7 +61,22 @@ DOMSelectors.drawBtn.addEventListener("click", function (event) {
   draw(1);
 });
 
-draw(2);
+async function blackJack() {
+  try {
+    await draw(2);
+    const response = await fetch(
+      `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDrawnCards}`
+    );
+    const data = await response.json();
+    data.cards.forEach((card) => {
+      console.log(card.code);
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+blackJack();
 
 // function greet(name) {
 //   const greetPromise = new Promise(function (resolve, reject) {
