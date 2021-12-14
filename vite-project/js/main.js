@@ -19,13 +19,10 @@ async function fetchApi(url) {
 
 async function draw(number) {
   try {
-    const response = await fetch(
+    const data = await fetchApi(
       `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.draw}${number}`
     );
-    const data = await response.json(); // turns response in json we can use
-    console.log(data);
     data.cards.forEach(async (card) => {
-      console.log(card.image);
       DOMSelectors.main.insertAdjacentHTML(
         "beforeend",
         `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card">`
@@ -33,14 +30,36 @@ async function draw(number) {
       await fetchApi(
         `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.addToDrawnCards}${card.code}`
       );
-      await fetchApi(
-        `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDrawnCards}`
-      );
     });
   } catch (err) {
     console.log(err);
   }
 }
+
+// async function draw(number) {
+//   try {
+//     const response = await fetch(
+//       `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.draw}${number}`
+//     );
+//     const data = await response.json(); // turns response in json we can use
+//     console.log(data);
+//     data.cards.forEach(async (card) => {
+//       console.log(card.image);
+//       DOMSelectors.main.insertAdjacentHTML(
+//         "beforeend",
+//         `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card">`
+//       );
+//       await fetchApi(
+//         `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.addToDrawnCards}${card.code}`
+//       );
+//       await fetchApi(
+//         `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDrawnCards}`
+//       );
+//     });
+//   } catch (err) {
+//     console.log(err);
+//   }
+// }
 
 function shuffle() {
   if (DOMSelectors.main.children.length > 0) {
@@ -61,22 +80,37 @@ DOMSelectors.drawBtn.addEventListener("click", function (event) {
   draw(1);
 });
 
+DOMSelectors.blackjackBtn.addEventListener("click", async function (event) {
+  event.preventDefault();
+  await blackJack();
+});
+
+DOMSelectors.logBtn.addEventListener("click", function (event) {
+  event.preventDefault();
+  fetchApi(`${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDrawnCards}`);
+});
+
 async function blackJack() {
   try {
-    await draw(2);
     const response = await fetch(
       `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDrawnCards}`
     );
     const data = await response.json();
-    data.cards.forEach((card) => {
-      console.log(card.code);
-    });
+    if (data.piles.drawn_cards.cards.length > 0) {
+      data.piles.drawn_cards.cards.forEach((card) => {
+        fetchApi(
+          `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.addToPlayer}${card.code}`
+        );
+      });
+    } else {
+      console.log("no cards drawn");
+    }
   } catch (err) {
     console.log(err);
   }
 }
 
-blackJack();
+draw(2);
 
 // function greet(name) {
 //   const greetPromise = new Promise(function (resolve, reject) {
