@@ -36,31 +36,6 @@ async function draw(number) {
   }
 }
 
-// async function draw(number) {
-//   try {
-//     const response = await fetch(
-//       `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.draw}${number}`
-//     );
-//     const data = await response.json(); // turns response in json we can use
-//     console.log(data);
-//     data.cards.forEach(async (card) => {
-//       console.log(card.image);
-//       DOMSelectors.main.insertAdjacentHTML(
-//         "beforeend",
-//         `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card">`
-//       );
-//       await fetchApi(
-//         `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.addToDrawnCards}${card.code}`
-//       );
-//       await fetchApi(
-//         `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDrawnCards}`
-//       );
-//     });
-//   } catch (err) {
-//     console.log(err);
-//   }
-// }
-
 function shuffle() {
   if (DOMSelectors.main.children.length > 0) {
     while (DOMSelectors.main.children.length > 0) {
@@ -80,10 +55,13 @@ DOMSelectors.drawBtn.addEventListener("click", function (event) {
   draw(1);
 });
 
-DOMSelectors.blackjackBtn.addEventListener("click", async function (event) {
-  event.preventDefault();
-  await transferToPlayer();
-});
+DOMSelectors.transferToPlayerBtn.addEventListener(
+  "click",
+  async function (event) {
+    event.preventDefault();
+    await transferToPlayer();
+  }
+);
 
 DOMSelectors.logBtn.addEventListener("click", function (event) {
   event.preventDefault();

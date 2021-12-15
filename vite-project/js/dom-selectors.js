@@ -3,7 +3,7 @@ const DOMSelectors = {
   main: document.getElementById("main"),
   shuffleBtn: document.getElementById("shuffleBtn"),
   drawBtn: document.getElementById("drawBtn"),
-  blackjackBtn: document.getElementById("blackjackBtn"),
+  transferToPlayerBtn: document.getElementById("transferToPlayerBtn"),
   logBtn: document.getElementById("logBtn"),
   card: document.querySelector(".card"),
   allCards: document.querySelectorAll(".card"),
