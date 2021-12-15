@@ -5,6 +5,7 @@ const apiLinks = {
   addToDrawnCards: "pile/drawn_cards/add/?cards=",
   addToPlayer: "pile/player_hand/add/?cards=",
   listDrawnCards: "pile/drawn_cards/list",
+  listPlayerCards: "pile/player_hand/list",
   shuffle: "shuffle",
   shuffleRemaining: "shuffle/?remaining=true",
 };

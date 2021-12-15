@@ -23,12 +23,12 @@ async function draw(number) {
       `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.draw}${number}`
     );
     data.cards.forEach(async (card) => {
+      await fetchApi(
+        `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.addToDrawnCards}${card.code}`
+      );
       DOMSelectors.main.insertAdjacentHTML(
         "beforeend",
         `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card">`
-      );
-      await fetchApi(
-        `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.addToDrawnCards}${card.code}`
       );
     });
   } catch (err) {
@@ -82,7 +82,7 @@ DOMSelectors.drawBtn.addEventListener("click", function (event) {
 
 DOMSelectors.blackjackBtn.addEventListener("click", async function (event) {
   event.preventDefault();
-  await blackJack();
+  await transferToPlayer();
 });
 
 DOMSelectors.logBtn.addEventListener("click", function (event) {
@@ -90,7 +90,7 @@ DOMSelectors.logBtn.addEventListener("click", function (event) {
   fetchApi(`${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDrawnCards}`);
 });
 
-async function blackJack() {
+async function transferToPlayer() {
   try {
     const response = await fetch(
       `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDrawnCards}`
@@ -102,15 +102,20 @@ async function blackJack() {
           `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.addToPlayer}${card.code}`
         );
       });
+      transferToPlayer(); // finally makes it work!!
     } else {
       console.log("no cards drawn");
+      fetchApi(
+        `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listPlayerCards}`
+      );
     }
   } catch (err) {
     console.log(err);
   }
 }
 
-draw(2);
+draw(1); // using draw(2) did not work for adding to piles
+draw(1);
 
 // function greet(name) {
 //   const greetPromise = new Promise(function (resolve, reject) {
