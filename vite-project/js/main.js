@@ -21,6 +21,7 @@ async function draw(path, direction) {
       `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.draw}1`
     );
     data.cards.forEach(async (card) => {
+      console.log(path);
       await fetchApi(
         `${apiLinks.baseURL}/${apiLinks.deck}/pile/${path}/add/?cards=${card.code}`
       );
@@ -36,7 +37,7 @@ async function draw(path, direction) {
           .getElementById(path)
           .insertAdjacentHTML(
             "beforeend",
-            `<img src="/public/card-back" alt="Face down card" class="card">`
+            `<img src="/card-back.png" alt="Face down card" class="card" id="face-down">`
           );
       }
     });
@@ -46,9 +47,11 @@ async function draw(path, direction) {
 }
 
 function shuffle() {
-  DOMSelectors.main.children.forEach((div) => {
-    if (div.children.length > 0) {
-      while (div.children.length > 0) {
+  const divs = ["drawn_cards", "player_hand", "dealer_hand"];
+
+  divs.forEach((div) => {
+    if (document.getElementById(div).children.length > 0) {
+      while (document.getElementById(div).children.length > 0) {
         document.querySelector(".card").remove();
       }
     }
@@ -106,11 +109,13 @@ async function transferToDealer() {
 }
 
 async function dealBlackJack() {
-  shuffle();
   await draw("player_hand");
   await draw("dealer_hand");
   await draw("player_hand");
   await draw("dealer_hand", "down");
+  await fetchApi(
+    `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDealerCards}`
+  );
 }
 
 DOMSelectors.shuffleBtn.addEventListener("click", function (event) {
