@@ -7,6 +7,9 @@ const DOMSelectors = {
   logBtn: document.getElementById("logBtn"),
   card: document.querySelector(".card"),
   allCards: document.querySelectorAll(".card"),
+  dealerHand: document.getElementById("dealer_hand"),
+  playerHand: document.getElementById("player_hand"),
+  drawnCards: document.getElementById("drawn_cards"),
 };
 
 export { DOMSelectors };

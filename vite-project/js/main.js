@@ -23,14 +23,21 @@ async function draw(path, direction) {
     data.cards.forEach(async (card) => {
       console.log(path);
       await fetchApi(
-        `${apiLinks.baseURL}/${apiLinks.deck}/pile/${path}/add/?cards=${card.code}`
+        `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.addToDrawnCards}${card.code}`
       );
+      /* if (path === "player_hand") {
+        transferToPlayer();
+      } else if (path === "dealer_hand") {
+        transferToDealer();
+      } else {
+        console.log("Please specify path");
+      } */
       if (direction === undefined || direction === "up") {
         document
           .getElementById(path)
           .insertAdjacentHTML(
             "beforeend",
-            `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card">`
+            `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card" id="${card.code}">`
           );
       } else if (direction === "down") {
         document
@@ -95,6 +102,11 @@ async function transferToDealer() {
         fetchApi(
           `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.addToDealer}${card.code}`
         );
+        /* document.querySelector(".card").remove();
+        DOMSelectors.dealerHand.insertAdjacentHTML(
+          "beforeend",
+          `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card" id="${card.code}">`
+        ); */
       });
       transferToDealer(); // finally makes it work!!
     } else {
@@ -109,10 +121,12 @@ async function transferToDealer() {
 }
 
 async function dealBlackJack() {
-  await draw("player_hand");
-  await draw("dealer_hand");
-  await draw("player_hand");
-  await draw("dealer_hand", "down");
+  await draw("drawn_cards");
+  await draw("drawn_cards");
+  await transferToPlayer();
+  await draw("drawn_cards");
+  await draw("drawn_cards", "down");
+  await transferToDealer();
   await fetchApi(
     `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDealerCards}`
   );
@@ -136,10 +150,11 @@ DOMSelectors.transferToPlayerBtn.addEventListener(
   }
 );
 
-DOMSelectors.logBtn.addEventListener("click", function (event) {
+DOMSelectors.logBtn.addEventListener("click", async function (event) {
   event.preventDefault();
   // fetchApi(`${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDrawnCards}`);
-  dealBlackJack();
+  // await dealBlackJack();
+  await transferToDealer();
 });
 
 /* function greet(name) {
