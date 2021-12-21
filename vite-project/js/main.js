@@ -2,9 +2,7 @@ import "../styles/style.css";
 import { apiLinks } from "./api-links";
 import { DOMSelectors } from "./dom-selectors";
 
-/* const URL = `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.addToPlayer}8H,AS`; */ // example of how apiLinks works, this adds 8H and AS (which have already been drawn) to player's hand
-
-/* const URL = `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.draw}5`; */ // draws 5 cards from preexisting deck
+/* draw() accepts an argument of a path for the pile which you want to add the card to. draw(player_hand) draws to player_hand. When drawing to the pile drawn_cards, you can transfer those cards with the functions transferToPlayer() and transferToDealer(). NOTE: Those functions transfer all of the cards in drawn_cards to the respective piles they are transferring to. */
 
 async function fetchApi(url) {
   try {
@@ -17,78 +15,57 @@ async function fetchApi(url) {
   }
 }
 
-async function draw(number) {
+async function draw(path, direction) {
   try {
     const data = await fetchApi(
-      `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.draw}${number}`
+      `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.draw}1`
     );
     data.cards.forEach(async (card) => {
+      console.log(path);
       await fetchApi(
         `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.addToDrawnCards}${card.code}`
       );
-      DOMSelectors.main.insertAdjacentHTML(
-        "beforeend",
-        `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card">`
-      );
+      /* if (path === "player_hand") {
+        transferToPlayer();
+      } else if (path === "dealer_hand") {
+        transferToDealer();
+      } else {
+        console.log("Please specify path");
+      } */
+      if (direction === undefined || direction === "up") {
+        document
+          .getElementById(path)
+          .insertAdjacentHTML(
+            "beforeend",
+            `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card" id="${card.code}">`
+          );
+      } else if (direction === "down") {
+        document
+          .getElementById(path)
+          .insertAdjacentHTML(
+            "beforeend",
+            `<img src="/card-back.png" alt="Face down card" class="card" id="face-down">`
+          );
+      }
     });
   } catch (err) {
     console.log(err);
   }
 }
 
-// async function draw(number) {
-//   try {
-//     const response = await fetch(
-//       `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.draw}${number}`
-//     );
-//     const data = await response.json(); // turns response in json we can use
-//     console.log(data);
-//     data.cards.forEach(async (card) => {
-//       console.log(card.image);
-//       DOMSelectors.main.insertAdjacentHTML(
-//         "beforeend",
-//         `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card">`
-//       );
-//       await fetchApi(
-//         `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.addToDrawnCards}${card.code}`
-//       );
-//       await fetchApi(
-//         `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDrawnCards}`
-//       );
-//     });
-//   } catch (err) {
-//     console.log(err);
-//   }
-// }
-
 function shuffle() {
-  if (DOMSelectors.main.children.length > 0) {
-    while (DOMSelectors.main.children.length > 0) {
-      document.querySelector(".card").remove();
+  const divs = ["drawn_cards", "player_hand", "dealer_hand"];
+
+  divs.forEach((div) => {
+    if (document.getElementById(div).children.length > 0) {
+      while (document.getElementById(div).children.length > 0) {
+        document.querySelector(".card").remove();
+      }
     }
-  }
+  });
+
   fetchApi(`${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.shuffle}`);
 }
-
-DOMSelectors.shuffleBtn.addEventListener("click", function (event) {
-  event.preventDefault();
-  shuffle();
-});
-
-DOMSelectors.drawBtn.addEventListener("click", function (event) {
-  event.preventDefault();
-  draw(1);
-});
-
-DOMSelectors.blackjackBtn.addEventListener("click", async function (event) {
-  event.preventDefault();
-  await transferToPlayer();
-});
-
-DOMSelectors.logBtn.addEventListener("click", function (event) {
-  event.preventDefault();
-  fetchApi(`${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDrawnCards}`);
-});
 
 async function transferToPlayer() {
   try {
@@ -114,18 +91,82 @@ async function transferToPlayer() {
   }
 }
 
-draw(1); // using draw(2) did not work for adding to piles
-draw(1);
+async function transferToDealer() {
+  try {
+    const response = await fetch(
+      `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDrawnCards}`
+    );
+    const data = await response.json();
+    if (data.piles.drawn_cards.cards.length > 0) {
+      data.piles.drawn_cards.cards.forEach((card) => {
+        fetchApi(
+          `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.addToDealer}${card.code}`
+        );
+        /* document.querySelector(".card").remove();
+        DOMSelectors.dealerHand.insertAdjacentHTML(
+          "beforeend",
+          `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card" id="${card.code}">`
+        ); */
+      });
+      transferToDealer(); // finally makes it work!!
+    } else {
+      console.log("no cards drawn");
+      fetchApi(
+        `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDealerCards}`
+      );
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
 
-// function greet(name) {
-//   const greetPromise = new Promise(function (resolve, reject) {
-//     resolve(`hello ${name}`);
-//   });
-//   return greetPromise;
-// }
+async function dealBlackJack() {
+  await draw("drawn_cards");
+  await draw("drawn_cards");
+  await transferToPlayer();
+  await draw("drawn_cards");
+  await draw("drawn_cards", "down");
+  await transferToDealer();
+  await fetchApi(
+    `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDealerCards}`
+  );
+}
 
-// const suzie = greet("Suzie");
+DOMSelectors.shuffleBtn.addEventListener("click", function (event) {
+  event.preventDefault();
+  shuffle();
+});
 
-// suzie.then((result) => {
-//   console.log(result);
-// });
+DOMSelectors.drawBtn.addEventListener("click", function (event) {
+  event.preventDefault();
+  draw("drawn_cards");
+});
+
+DOMSelectors.transferToPlayerBtn.addEventListener(
+  "click",
+  async function (event) {
+    event.preventDefault();
+    await transferToPlayer();
+  }
+);
+
+DOMSelectors.logBtn.addEventListener("click", async function (event) {
+  event.preventDefault();
+  // fetchApi(`${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDrawnCards}`);
+  // await dealBlackJack();
+  await transferToDealer();
+});
+
+/* function greet(name) {
+  const greetPromise = new Promise(function (resolve, reject) {
+    resolve(`hello ${name}`);
+  });
+  return greetPromise;
+}
+
+const suzie = greet("Suzie");
+
+suzie.then((result) => {
+  console.log(result);
+});
+ */

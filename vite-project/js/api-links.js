@@ -4,8 +4,10 @@ const apiLinks = {
   draw: "draw/?count=",
   addToDrawnCards: "pile/drawn_cards/add/?cards=",
   addToPlayer: "pile/player_hand/add/?cards=",
+  addToDealer: "pile/dealer_hand/add/?cards=",
   listDrawnCards: "pile/drawn_cards/list",
   listPlayerCards: "pile/player_hand/list",
+  listDealerCards: "pile/dealer_hand/list",
   shuffle: "shuffle",
   shuffleRemaining: "shuffle/?remaining=true",
 };

@@ -14,11 +14,19 @@
     <menu>
       <button id="shuffleBtn" class="btn">Shuffle the Deck</button>
       <button id="drawBtn" class="btn">Draw a Card</button>
-      <button id="blackjackBtn" class="btn">Transfer to Player</button>
+      <button id="transferToPlayerBtn" class="btn">Transfer to Player</button>
       <button id="logBtn" class="btn">log</button>
     </menu>
     <div id="main">
-      <!-- <img src="${card.image}" alt="${card.value} of ${card.suit}" class="card"> -->
+      <div id="drawn_cards">
+        <!-- <img src="${card.image}" alt="${card.value} of ${card.suit}" class="card"> -->
+      </div>
+      <div id="player_hand">
+        <!-- <img src="${card.image}" alt="${card.value} of ${card.suit}" class="card"> -->
+      </div>
+      <div id="dealer_hand">
+        <!-- <img src="${card.image}" alt="${card.value} of ${card.suit}" class="card"> -->
+      </div>
     </div>
     <script type="module" src="/js/main.js"></script>
   </body>
