@@ -2,7 +2,7 @@ import "../styles/style.css";
 import { apiLinks } from "./api-links";
 import { DOMSelectors } from "./dom-selectors";
 
-/* draw() accepts an argument of a path for the pile which you want to add the card to. draw(player_hand) draws to player_hand. When drawing to the pile drawn_cards, you can transfer those cards with the functions transferToPlayer() and transferToDealer(). NOTE: Those functions transfer all of the cards in drawn_cards to the respective piles they are transferring to. */
+/* NEXT STEP:: Make an enormous conditional statement that progresses the game. Make it do all of the card drawing until player chooses to hit/stay. There will be a button that you can press to trigger this function and progress the whole game. Part of this function will be to check score, especially to tell whether dealer should hit or stay. Also add functionality to the hit and/or stay button that tells whether you have busted/gotten a blackjack. */
 
 async function fetchApi(url) {
   try {
@@ -23,15 +23,8 @@ async function draw(path, direction) {
     data.cards.forEach(async (card) => {
       console.log(path);
       await fetchApi(
-        `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.addToDrawnCards}${card.code}`
+        `${apiLinks.baseURL}/${apiLinks.deck}/pile/${path}/add/?cards=${card.code}`
       );
-      /* if (path === "player_hand") {
-        transferToPlayer();
-      } else if (path === "dealer_hand") {
-        transferToDealer();
-      } else {
-        console.log("Please specify path");
-      } */
       if (direction === undefined || direction === "up") {
         document
           .getElementById(path)
@@ -135,26 +128,47 @@ async function dealBlackJack() {
 DOMSelectors.shuffleBtn.addEventListener("click", function (event) {
   event.preventDefault();
   shuffle();
+  DOMSelectors.body.classList.remove("stay");
 });
 
-DOMSelectors.drawBtn.addEventListener("click", function (event) {
+DOMSelectors.drawPlayerBtn.addEventListener("click", function (event) {
   event.preventDefault();
-  draw("drawn_cards");
-});
-
-DOMSelectors.transferToPlayerBtn.addEventListener(
-  "click",
-  async function (event) {
-    event.preventDefault();
-    await transferToPlayer();
+  if (!DOMSelectors.body.classList.contains("stay")) {
+    draw("player_hand");
   }
-);
+});
 
-DOMSelectors.logBtn.addEventListener("click", async function (event) {
+DOMSelectors.drawDealerBtn.addEventListener("click", function (event) {
   event.preventDefault();
-  // fetchApi(`${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDrawnCards}`);
+  if (DOMSelectors.dealerHand.children.length === 1) {
+    draw("dealer_hand", "down");
+  } else {
+    draw("dealer_hand");
+  }
+});
+
+DOMSelectors.logBtn.addEventListener("click", function (event) {
+  event.preventDefault();
+  fetchApi(`${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listPlayerCards}`);
   // await dealBlackJack();
-  await transferToDealer();
+  // await transferToDealer();
+});
+
+DOMSelectors.stayBtn.addEventListener("click", async function (event) {
+  event.preventDefault();
+  DOMSelectors.body.classList.add("stay");
+  const data = await fetchApi(
+    `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDealerCards}`
+  );
+  while (DOMSelectors.dealerHand.children.length > 0) {
+    DOMSelectors.dealerHand.querySelector(".card").remove();
+  }
+  await data.piles.dealer_hand.cards.forEach(async (card) => {
+    DOMSelectors.dealerHand.insertAdjacentHTML(
+      "beforeend",
+      `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card" id="${card.code}">`
+    );
+  });
 });
 
 /* function greet(name) {
