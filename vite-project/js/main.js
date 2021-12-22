@@ -113,6 +113,72 @@ async function transferToDealer() {
   }
 }
 
+async function proceed() {
+  if (DOMSelectors.playerHand.children.length > 0) {
+    if (DOMSelectors.dealerHand.children.length > 0) {
+      if (DOMSelectors.playerHand.children.length > 1) {
+        if (DOMSelectors.dealerHand.children.length === 1) {
+          draw("dealer_hand", "down");
+          console.log("Please hit or stay"); // make it insert this statement into the DOM somewhere idk
+        } else {
+          const data = await fetchApi(
+            `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDealerCards}`
+          );
+          let dealerValue = 0;
+          await data.piles.dealer_hand.cards.forEach(async (card) => {
+            if (
+              card.value === "JACK" ||
+              card.value === "QUEEN" ||
+              card.value === "KING"
+            ) {
+              dealerValue += 10;
+            } else if (card.value === "A") {
+              dealerValue += 11;
+            } else {
+              dealerValue += parseInt(card.value);
+            }
+          });
+          console.log(dealerValue);
+          if (dealerValue <= 16) {
+            draw("dealer_hand");
+          } else if (dealerValue >= 22) {
+            console.log("Dealer busts");
+          } else {
+            const data = await fetchApi(
+              `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listPlayerCards}`
+            );
+            let playerValue = 0;
+            await data.piles.player_hand.cards.forEach(async (card) => {
+              if (
+                card.value === "JACK" ||
+                card.value === "QUEEN" ||
+                card.value === "KING"
+              ) {
+                playerValue += 10;
+              } else if (card.value === "A") {
+                playerValue += 11;
+              } else {
+                playerValue += parseInt(card.value);
+              }
+            });
+            if (dealerValue > playerValue) {
+              console.log("dealer wins");
+            } else {
+              console.log("player wins");
+            }
+          }
+        }
+      } else {
+        draw("player_hand");
+      }
+    } else {
+      draw("dealer_hand");
+    }
+  } else {
+    draw("player_hand");
+  }
+}
+
 async function dealBlackJack() {
   await draw("drawn_cards");
   await draw("drawn_cards");
@@ -169,6 +235,12 @@ DOMSelectors.stayBtn.addEventListener("click", async function (event) {
       `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card" id="${card.code}">`
     );
   });
+  proceed();
+});
+
+DOMSelectors.continueBtn.addEventListener("click", function (event) {
+  event.preventDefault();
+  proceed();
 });
 
 /* function greet(name) {

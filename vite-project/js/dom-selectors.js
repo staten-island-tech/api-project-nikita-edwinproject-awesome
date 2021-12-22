@@ -6,6 +6,7 @@ const DOMSelectors = {
   drawDealerBtn: document.getElementById("drawDealerBtn"),
   stayBtn: document.getElementById("stayBtn"),
   logBtn: document.getElementById("logBtn"),
+  continueBtn: document.getElementById("continueBtn"),
   card: document.querySelector(".card"),
   allCards: document.querySelectorAll(".card"),
   dealerHand: document.getElementById("dealer_hand"),
