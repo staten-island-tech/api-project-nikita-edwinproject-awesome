@@ -5,6 +5,7 @@ const DOMSelectors = {
   drawPlayerBtn: document.getElementById("drawPlayerBtn"),
   drawDealerBtn: document.getElementById("drawDealerBtn"),
   stayBtn: document.getElementById("stayBtn"),
+  hitBtn: document.getElementById("hitBtn"),
   logBtn: document.getElementById("logBtn"),
   continueBtn: document.getElementById("continueBtn"),
   card: document.querySelector(".card"),

@@ -21,24 +21,28 @@ async function draw(path, direction) {
       `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.draw}1`
     );
     data.cards.forEach(async (card) => {
-      console.log(path);
-      await fetchApi(
-        `${apiLinks.baseURL}/${apiLinks.deck}/pile/${path}/add/?cards=${card.code}`
-      );
-      if (direction === undefined || direction === "up") {
-        document
-          .getElementById(path)
-          .insertAdjacentHTML(
-            "beforeend",
-            `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card" id="${card.code}">`
-          );
-      } else if (direction === "down") {
-        document
-          .getElementById(path)
-          .insertAdjacentHTML(
-            "beforeend",
-            `<img src="/card-back.png" alt="Face down card" class="card" id="face-down">`
-          );
+      try {
+        console.log(path);
+        await fetchApi(
+          `${apiLinks.baseURL}/${apiLinks.deck}/pile/${path}/add/?cards=${card.code}`
+        );
+        if (direction === undefined || direction === "up") {
+          document
+            .getElementById(path)
+            .insertAdjacentHTML(
+              "beforeend",
+              `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card" id="${card.code}">`
+            );
+        } else if (direction === "down") {
+          document
+            .getElementById(path)
+            .insertAdjacentHTML(
+              "beforeend",
+              `<img src="/card-back.png" alt="Face down card" class="card" id="face-down">`
+            );
+        }
+      } catch (err) {
+        console.log(err);
       }
     });
   } catch (err) {
@@ -60,135 +64,82 @@ function shuffle() {
   fetchApi(`${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.shuffle}`);
 }
 
-async function transferToPlayer() {
-  try {
-    const response = await fetch(
-      `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDrawnCards}`
-    );
-    const data = await response.json();
-    if (data.piles.drawn_cards.cards.length > 0) {
-      data.piles.drawn_cards.cards.forEach((card) => {
-        fetchApi(
-          `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.addToPlayer}${card.code}`
-        );
-      });
-      transferToPlayer(); // finally makes it work!!
-    } else {
-      console.log("no cards drawn");
-      fetchApi(
-        `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listPlayerCards}`
-      );
-    }
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-async function transferToDealer() {
-  try {
-    const response = await fetch(
-      `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDrawnCards}`
-    );
-    const data = await response.json();
-    if (data.piles.drawn_cards.cards.length > 0) {
-      data.piles.drawn_cards.cards.forEach((card) => {
-        fetchApi(
-          `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.addToDealer}${card.code}`
-        );
-        /* document.querySelector(".card").remove();
-        DOMSelectors.dealerHand.insertAdjacentHTML(
-          "beforeend",
-          `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card" id="${card.code}">`
-        ); */
-      });
-      transferToDealer(); // finally makes it work!!
-    } else {
-      console.log("no cards drawn");
-      fetchApi(
-        `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDealerCards}`
-      );
-    }
-  } catch (err) {
-    console.log(err);
-  }
-}
-
 async function proceed() {
-  if (DOMSelectors.playerHand.children.length > 0) {
-    if (DOMSelectors.dealerHand.children.length > 0) {
-      if (DOMSelectors.playerHand.children.length > 1) {
-        if (DOMSelectors.dealerHand.children.length === 1) {
-          draw("dealer_hand", "down");
-          console.log("Please hit or stay"); // make it insert this statement into the DOM somewhere idk
-        } else {
-          const data = await fetchApi(
-            `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDealerCards}`
-          );
-          let dealerValue = 0;
-          await data.piles.dealer_hand.cards.forEach(async (card) => {
-            if (
-              card.value === "JACK" ||
-              card.value === "QUEEN" ||
-              card.value === "KING"
-            ) {
-              dealerValue += 10;
-            } else if (card.value === "A") {
-              dealerValue += 11;
-            } else {
-              dealerValue += parseInt(card.value);
-            }
-          });
-          console.log(dealerValue);
-          if (dealerValue <= 16) {
-            draw("dealer_hand");
-          } else if (dealerValue >= 22) {
-            console.log("Dealer busts");
+  try {
+    if (DOMSelectors.playerHand.children.length > 0) {
+      if (DOMSelectors.dealerHand.children.length > 0) {
+        if (DOMSelectors.playerHand.children.length > 1) {
+          if (DOMSelectors.dealerHand.children.length === 1) {
+            draw("dealer_hand", "down");
+            console.log("Please hit or stay"); // make it insert this statement into the DOM somewhere idk
           } else {
             const data = await fetchApi(
-              `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listPlayerCards}`
+              `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDealerCards}`
             );
-            let playerValue = 0;
-            await data.piles.player_hand.cards.forEach(async (card) => {
-              if (
-                card.value === "JACK" ||
-                card.value === "QUEEN" ||
-                card.value === "KING"
-              ) {
-                playerValue += 10;
-              } else if (card.value === "A") {
-                playerValue += 11;
-              } else {
-                playerValue += parseInt(card.value);
+            let dealerValue = 0;
+            await data.piles.dealer_hand.cards.forEach(async (card) => {
+              try {
+                if (
+                  card.value === "JACK" ||
+                  card.value === "QUEEN" ||
+                  card.value === "KING"
+                ) {
+                  dealerValue += 10;
+                } else if (card.value === "ACE") {
+                  dealerValue += 11;
+                } else {
+                  dealerValue += parseInt(card.value);
+                }
+              } catch (err) {
+                console.log(err);
               }
             });
-            if (dealerValue > playerValue) {
-              console.log("dealer wins");
+            console.log(dealerValue);
+            if (dealerValue <= 16) {
+              draw("dealer_hand");
+            } else if (dealerValue >= 22) {
+              console.log("Dealer busts");
             } else {
-              console.log("player wins");
+              const data = await fetchApi(
+                `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listPlayerCards}`
+              );
+              let playerValue = 0;
+              await data.piles.player_hand.cards.forEach(async (card) => {
+                try {
+                  if (
+                    card.value === "JACK" ||
+                    card.value === "QUEEN" ||
+                    card.value === "KING"
+                  ) {
+                    playerValue += 10;
+                  } else if (card.value === "ACE") {
+                    playerValue += 11;
+                  } else {
+                    playerValue += parseInt(card.value);
+                  }
+                } catch (err) {
+                  console.log(err);
+                }
+              });
+              if (dealerValue < playerValue && playerValue <= 21) {
+                console.log("player wins");
+              } else {
+                console.log("dealer wins");
+              }
             }
           }
+        } else {
+          draw("player_hand");
         }
       } else {
-        draw("player_hand");
+        draw("dealer_hand");
       }
     } else {
-      draw("dealer_hand");
+      draw("player_hand");
     }
-  } else {
-    draw("player_hand");
+  } catch (err) {
+    console.log(err);
   }
-}
-
-async function dealBlackJack() {
-  await draw("drawn_cards");
-  await draw("drawn_cards");
-  await transferToPlayer();
-  await draw("drawn_cards");
-  await draw("drawn_cards", "down");
-  await transferToDealer();
-  await fetchApi(
-    `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDealerCards}`
-  );
 }
 
 DOMSelectors.shuffleBtn.addEventListener("click", function (event) {
@@ -221,26 +172,62 @@ DOMSelectors.logBtn.addEventListener("click", function (event) {
 });
 
 DOMSelectors.stayBtn.addEventListener("click", async function (event) {
-  event.preventDefault();
-  DOMSelectors.body.classList.add("stay");
-  const data = await fetchApi(
-    `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDealerCards}`
-  );
-  while (DOMSelectors.dealerHand.children.length > 0) {
-    DOMSelectors.dealerHand.querySelector(".card").remove();
-  }
-  await data.piles.dealer_hand.cards.forEach(async (card) => {
-    DOMSelectors.dealerHand.insertAdjacentHTML(
-      "beforeend",
-      `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card" id="${card.code}">`
+  try {
+    event.preventDefault();
+    DOMSelectors.body.classList.add("stay");
+    const data = await fetchApi(
+      `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDealerCards}`
     );
-  });
-  proceed();
+    while (DOMSelectors.dealerHand.children.length > 0) {
+      DOMSelectors.dealerHand.querySelector(".card").remove();
+    }
+    await data.piles.dealer_hand.cards.forEach((card) => {
+      DOMSelectors.dealerHand.insertAdjacentHTML(
+        "beforeend",
+        `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card" id="${card.code}">`
+      );
+    });
+    proceed();
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 DOMSelectors.continueBtn.addEventListener("click", function (event) {
   event.preventDefault();
   proceed();
+});
+
+DOMSelectors.hitBtn.addEventListener("click", async function (event) {
+  try {
+    event.preventDefault();
+    const data = await fetchApi(
+      `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listPlayerCards}`
+    );
+    let playerValue = 0;
+    await data.piles.player_hand.cards.forEach(async (card) => {
+      try {
+        if (
+          card.value === "JACK" ||
+          card.value === "QUEEN" ||
+          card.value === "KING"
+        ) {
+          playerValue += 10;
+        } else if (card.value === "ACE") {
+          playerValue += 11;
+        } else {
+          playerValue += parseInt(card.value);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    });
+    if (playerValue < 21) {
+      draw("player_hand");
+    }
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 /* function greet(name) {
