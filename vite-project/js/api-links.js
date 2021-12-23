@@ -1,6 +1,6 @@
 const apiLinks = {
   baseURL: "https://deckofcardsapi.com/api/deck",
-  deck: "ebxglu2dai8p", // this should remain dynamic
+  deck: "gdh738kbjx9v", // this should remain relatively dynamic
   draw: "draw/?count=",
   addToDrawnCards: "pile/drawn_cards/add/?cards=",
   addToPlayer: "pile/player_hand/add/?cards=",

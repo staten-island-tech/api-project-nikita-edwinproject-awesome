@@ -13,10 +13,21 @@
     </header>
     <menu>
       <button id="shuffleBtn" class="btn">Shuffle the Deck</button>
-      <button id="drawBtn" class="btn">Draw a Card</button>
-      <button id="transferToPlayerBtn" class="btn">Transfer to Player</button>
+      <button id="drawPlayerBtn" class="btn">Deal to Player</button>
+      <button id="drawDealerBtn" class="btn">Deal to Dealer</button>
       <button id="logBtn" class="btn">log</button>
+      <button id="hitBtn" class="btn">Hit!</button>
+      <button id="stayBtn" class="btn">Stay!</button>
+      <button id="continueBtn" class="btn">Continue</button>
     </menu>
+    <div id="score">
+      <div class="score_card">
+        <h3 id="player_score"><!-- ${playerValue} --></h3>
+      </div>
+      <div class="score_card">
+        <h3 id="dealer_score"><!-- ${dealerValue} --></h3>
+      </div>
+    </div>
     <div id="main">
       <div id="drawn_cards">
         <!-- <img src="${card.image}" alt="${card.value} of ${card.suit}" class="card"> -->
