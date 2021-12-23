@@ -26,6 +26,7 @@ async function draw(path, direction) {
         await fetchApi(
           `${apiLinks.baseURL}/${apiLinks.deck}/pile/${path}/add/?cards=${card.code}`
         );
+
         if (direction === undefined || direction === "up") {
           document
             .getElementById(path)
@@ -33,6 +34,7 @@ async function draw(path, direction) {
               "beforeend",
               `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card" id="${card.code}">`
             );
+          await keepScore(path);
         } else if (direction === "down") {
           document
             .getElementById(path)
@@ -50,6 +52,59 @@ async function draw(path, direction) {
   }
 }
 
+async function keepScore(path) {
+  const list = await fetchApi(
+    `${apiLinks.baseURL}/${apiLinks.deck}/pile/${path}/list`
+  );
+
+  if (path === "player_hand") {
+    let playerValue = 0;
+    await list.piles.player_hand.cards.forEach(async (card) => {
+      try {
+        if (
+          card.value === "JACK" ||
+          card.value === "QUEEN" ||
+          card.value === "KING"
+        ) {
+          playerValue += 10;
+        } else if (card.value === "ACE") {
+          playerValue += 11;
+        } else {
+          playerValue += parseInt(card.value);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    });
+    DOMSelectors.playerScore.textContent = playerValue;
+  } else if (path === "dealer_hand") {
+    let dealerValue = 0;
+
+    await list.piles.dealer_hand.cards.forEach(async (card) => {
+      try {
+        if (
+          card.value === "JACK" ||
+          card.value === "QUEEN" ||
+          card.value === "KING"
+        ) {
+          dealerValue += 10;
+        } else if (card.value === "ACE") {
+          dealerValue += 11;
+        } else {
+          dealerValue += parseInt(card.value);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    });
+    DOMSelectors.dealerScore.textContent = dealerValue;
+  }
+}
+
+function winOrLose(condition) {
+  console.log(condition);
+}
+
 function shuffle() {
   const divs = ["drawn_cards", "player_hand", "dealer_hand"];
 
@@ -60,6 +115,9 @@ function shuffle() {
       }
     }
   });
+
+  DOMSelectors.playerScore.textContent = "";
+  DOMSelectors.dealerScore.textContent = "";
 
   fetchApi(`${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.shuffle}`);
 }
@@ -94,11 +152,10 @@ async function proceed() {
                 console.log(err);
               }
             });
-            console.log(dealerValue);
             if (dealerValue <= 16) {
               draw("dealer_hand");
             } else if (dealerValue >= 22) {
-              console.log("Dealer busts");
+              winOrLose("Dealer Busts, Player Wins");
             } else {
               const data = await fetchApi(
                 `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listPlayerCards}`
@@ -122,9 +179,9 @@ async function proceed() {
                 }
               });
               if (dealerValue < playerValue && playerValue <= 21) {
-                console.log("player wins");
+                winOrLose("Player Wins");
               } else {
-                console.log("dealer wins");
+                winOrLose("Dealer Wins");
               }
             }
           }
@@ -176,18 +233,44 @@ DOMSelectors.stayBtn.addEventListener("click", async function (event) {
     event.preventDefault();
     DOMSelectors.body.classList.add("stay");
     const data = await fetchApi(
-      `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDealerCards}`
+      `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listPlayerCards}`
     );
-    while (DOMSelectors.dealerHand.children.length > 0) {
-      DOMSelectors.dealerHand.querySelector(".card").remove();
-    }
-    await data.piles.dealer_hand.cards.forEach((card) => {
-      DOMSelectors.dealerHand.insertAdjacentHTML(
-        "beforeend",
-        `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card" id="${card.code}">`
-      );
+    let playerValue = 0;
+    await data.piles.player_hand.cards.forEach(async (card) => {
+      try {
+        if (
+          card.value === "JACK" ||
+          card.value === "QUEEN" ||
+          card.value === "KING"
+        ) {
+          playerValue += 10;
+        } else if (card.value === "ACE") {
+          playerValue += 11;
+        } else {
+          playerValue += parseInt(card.value);
+        }
+      } catch (err) {
+        console.log(err);
+      }
     });
-    proceed();
+    if (playerValue > 21) {
+      winOrLose("Player Busts, Dealer Wins");
+    } else {
+      const data = await fetchApi(
+        `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDealerCards}`
+      );
+      while (DOMSelectors.dealerHand.children.length > 0) {
+        DOMSelectors.dealerHand.querySelector(".card").remove();
+      }
+      await data.piles.dealer_hand.cards.forEach(async (card) => {
+        DOMSelectors.dealerHand.insertAdjacentHTML(
+          "beforeend",
+          `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card" id="${card.code}">`
+        );
+        await keepScore("dealer_hand");
+      });
+      proceed();
+    }
   } catch (err) {
     console.log(err);
   }
