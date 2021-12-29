@@ -1,6 +1,6 @@
 @import url(variables.css);
 
-/* html,
+html,
 body,
 * {
   margin: 0;
@@ -8,9 +8,51 @@ body,
   box-sizing: border-box;
   font-size: 62.5%;
   font-family: "Lato", sans-serif;
-} */
+}
 
-#face-down {
-  height: 314px;
-  width: 226px;
+img {
+  width: 12vw;
+}
+
+menu {
+  display: flex;
+  justify-content: center;
+}
+
+.btn,
+.btn:link,
+.btn:visited {
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 1.5rem 4rem;
+  /* display: inline-block; */
+  margin: 1rem;
+  font-size: 2rem;
+  border: none;
+  border-radius: 10rem;
+  transition: all 0.2s;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 0.5rem var(--box-shadow-color);
+}
+.btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 0px 0rem var(--box-shadow-color);
+}
+
+#shuffleBtn {
+  display: inline-block;
+}
+
+#hitBtn {
+  display: var(--hit-stay-btns);
+}
+
+#stayBtn {
+  display: var(--hit-stay-btns);
+}
+
+#continueBtn {
+  display: var(--continue-btn);
 }
