@@ -1,0 +1,70 @@
+:root {
+  --light-blue: #2998ff;
+  --black: #000;
+  --dark-blue: #135cc5;
+  --light-red: #f87171;
+  --dark-red: #dc2626;
+  --gray: #252c30;
+  --white: #fff;
+  --light-box-shadow: rgba(0, 0, 0, 0.2);
+  --dark-box-shadow: rgba(123, 123, 123, 0.2);
+  --toggle-on: rgb(255, 242, 166);
+
+  /*Intentions*/
+  --primary: var(--light-blue);
+  --secondary: var(--dark-blue);
+  --primary-text-color: var(--black);
+  --box-shadow-color: var(--light-box-shadow);
+  --theme-button-color: var(--white);
+  --sale-button-color: var(--white);
+  --stock-button-color: var(--white);
+
+  /*Typography*/
+  --h1: 7.594rem;
+  --h2: 5.063rem;
+  --h3: 3.375rem;
+  --h4: 2.25rem;
+  --h5: 1.5rem;
+}
+
+.dealing {
+  --continue-btn: inline-block;
+  --hit-stay-btns: none;
+}
+
+.stay {
+  --continue-btn: inline-block;
+  --hit-stay-btns: none;
+}
+
+.hit-stay {
+  --continue-btn: none;
+  --hit-stay-btns: inline-block;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-align: center;
+  margin: 2rem;
+  color: var(--primary-text-color);
+}
+
+h1 {
+  font-size: var(--h1);
+}
+h2 {
+  font-size: var(--h2);
+}
+h3 {
+  font-size: var(--h3);
+}
+h4 {
+  font-size: var(--h4);
+}
+h5 {
+  font-size: var(--h5);
+}
