@@ -76,6 +76,9 @@ async function keepScore(path) {
         }
       });
       DOMSelectors.playerScore.textContent = playerValue;
+      if (playerValue == 21 && DOMSelectors.playerHand.children.length === 2) {
+        winOrLose("player-win");
+      }
     } else if (path === "dealer_hand") {
       let dealerValue = 0;
 
@@ -105,7 +108,7 @@ async function keepScore(path) {
 
 function winOrLose(condition) {
   console.log(condition); // make this insert to DOM and stuff
-  DOMSelectors.body.classList.add("game-over");
+  DOMSelectors.body.classList.add("game-over", condition);
 }
 
 function shuffle() {
@@ -122,7 +125,13 @@ function shuffle() {
   DOMSelectors.playerScore.textContent = "";
   DOMSelectors.dealerScore.textContent = "";
 
-  DOMSelectors.body.classList.remove("stay", "hit-stay", "game-over");
+  DOMSelectors.body.classList.remove(
+    "stay",
+    "hit-stay",
+    "game-over",
+    "player-win",
+    "dealer-win"
+  );
   DOMSelectors.body.classList.add("dealing");
 
   fetchApi(`${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.shuffle}`);
@@ -132,9 +141,7 @@ async function proceed() {
   try {
     if (DOMSelectors.body.classList.contains("game-over")) {
       shuffle();
-      exit;
-    }
-    if (DOMSelectors.playerHand.children.length > 0) {
+    } else if (DOMSelectors.playerHand.children.length > 0) {
       if (DOMSelectors.dealerHand.children.length > 0) {
         if (DOMSelectors.playerHand.children.length > 1) {
           if (DOMSelectors.dealerHand.children.length === 1) {
@@ -167,7 +174,7 @@ async function proceed() {
             if (dealerValue <= 16) {
               draw("dealer_hand");
             } else if (dealerValue >= 22) {
-              winOrLose("Dealer Busts, Player Wins");
+              winOrLose("player-win");
             } else {
               const data = await fetchApi(
                 `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listPlayerCards}`
@@ -191,9 +198,9 @@ async function proceed() {
                 }
               });
               if (dealerValue < playerValue && playerValue <= 21) {
-                winOrLose("Player Wins");
+                winOrLose("player-win");
               } else {
-                winOrLose("Dealer Wins");
+                winOrLose("dealer-win");
               }
             }
           }
@@ -266,7 +273,7 @@ DOMSelectors.stayBtn.addEventListener("click", async function (event) {
       }
     });
     if (playerValue > 21) {
-      winOrLose("Player Busts, Dealer Wins");
+      winOrLose("dealer-win");
     } else {
       const data = await fetchApi(
         `${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listDealerCards}`

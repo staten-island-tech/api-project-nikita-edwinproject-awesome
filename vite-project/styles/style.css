@@ -19,6 +19,35 @@ menu {
   justify-content: center;
 }
 
+h4 {
+  margin-top: 2.7rem;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+#score {
+  display: flex;
+  justify-content: center;
+}
+
+.score_card {
+  display: inline-block;
+  /* background-color: var(--score-card-color); */
+  margin: 2rem;
+  border-radius: 2rem;
+  height: 8rem;
+  width: 8rem;
+  text-align: center;
+}
+
+#player_score_card {
+  background-color: var(--player-score-color);
+}
+
+#dealer_score_card {
+  background-color: var(--dealer-score-color);
+}
+
 .btn,
 .btn:link,
 .btn:visited {
