@@ -28,6 +28,7 @@ h4 {
 #score {
   display: flex;
   justify-content: center;
+  margin-bottom: 2vh;
 }
 
 .score_card {
@@ -46,6 +47,16 @@ h4 {
 
 #dealer_score_card {
   background-color: var(--dealer-score-color);
+}
+
+#main {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+}
+
+.hand {
+  display: inline-block;
 }
 
 .btn,
@@ -84,4 +95,40 @@ h4 {
 
 #continueBtn {
   display: var(--continue-btn);
+}
+
+/* Media Queries */
+
+@media (max-width: 768px) {
+  #main {
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  img {
+    width: 14vw;
+  }
+}
+
+@media (max-width: 425px) {
+  html,
+  body,
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 62.5%;
+    font-family: "Lato", sans-serif;
+  }
+
+  .btn {
+    font-size: 1.25rem;
+    padding: 1.5rem 4rem;
+    margin: 0.5rem;
+  }
+
+  img {
+    width: 23vw;
+  }
 }

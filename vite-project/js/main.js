@@ -112,7 +112,7 @@ function winOrLose(condition) {
 }
 
 function shuffle() {
-  const divs = ["drawn_cards", "player_hand", "dealer_hand"];
+  const divs = ["player_hand", "dealer_hand"];
 
   divs.forEach((div) => {
     if (document.getElementById(div).children.length > 0) {
