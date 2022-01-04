@@ -18,6 +18,8 @@
   --theme-button-color: var(--white);
   --sale-button-color: var(--white);
   --stock-button-color: var(--white);
+  --player-score-color: blue;
+  --dealer-score-color: blue;
 
   /*Typography*/
   --h1: 7.594rem;
@@ -40,6 +42,14 @@
 .hit-stay {
   --continue-btn: none;
   --hit-stay-btns: inline-block;
+}
+
+.player-win {
+  --player-score-color: green;
+}
+
+.dealer-win {
+  --dealer-score-color: green;
 }
 
 h1,
