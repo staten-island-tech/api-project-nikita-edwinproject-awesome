@@ -78,6 +78,10 @@ async function keepScore(path) {
       DOMSelectors.playerScore.textContent = playerValue;
       if (playerValue == 21 && DOMSelectors.playerHand.children.length === 2) {
         winOrLose("player-win");
+      } else if (playerValue > 21) {
+        winOrLose("dealer-win");
+        DOMSelectors.body.classList.add("dealing");
+        DOMSelectors.body.classList.remove("hit-stay");
       }
     } else if (path === "dealer_hand") {
       let dealerValue = 0;
