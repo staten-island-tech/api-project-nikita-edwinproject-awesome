@@ -20,24 +20,21 @@
       <button id="stayBtn" class="btn">Stay!</button>
       <button id="continueBtn" class="btn">Continue</button>
     </menu>
-    <div id="score">
+    <div id="scoring">
       <div class="score_card" id="player_score_card">
-        <h3 id="player_score"><!-- ${playerValue} --></h3>
+        <h3 id="player_score" class="score"><!-- ${playerValue} --></h3>
         <h4>Player</h4>
       </div>
       <div class="score_card" id="dealer_score_card">
-        <h3 id="dealer_score"><!-- ${dealerValue} --></h3>
+        <h3 id="dealer_score" class="score"><!-- ${dealerValue} --></h3>
         <h4>Dealer</h4>
       </div>
     </div>
     <div id="main">
-      <div id="drawn_cards">
+      <div id="player_hand" class="hand">
         <!-- <img src="${card.image}" alt="${card.value} of ${card.suit}" class="card"> -->
       </div>
-      <div id="player_hand">
-        <!-- <img src="${card.image}" alt="${card.value} of ${card.suit}" class="card"> -->
-      </div>
-      <div id="dealer_hand">
+      <div id="dealer_hand" class="hand">
         <!-- <img src="${card.image}" alt="${card.value} of ${card.suit}" class="card"> -->
       </div>
     </div>

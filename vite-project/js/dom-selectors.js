@@ -12,7 +12,7 @@ const DOMSelectors = {
   allCards: document.querySelectorAll(".card"),
   dealerHand: document.getElementById("dealer_hand"),
   playerHand: document.getElementById("player_hand"),
-  drawnCards: document.getElementById("drawn_cards"),
+  // drawnCards: document.getElementById("drawn_cards"),
   playerScore: document.getElementById("player_score"),
   dealerScore: document.getElementById("dealer_score"),
 };
