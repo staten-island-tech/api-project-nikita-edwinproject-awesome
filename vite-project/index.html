@@ -6,8 +6,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
   </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/main.js"></script>
+  <body class="dealing">
+    <header>
+      <h1>Blackjack</h1>
+      <h2>Play Now</h2>
+    </header>
+    <menu>
+      <button id="shuffleBtn" class="btn">Shuffle the Deck</button>
+      <!-- <button id="drawPlayerBtn" class="btn">Deal to Player</button>
+      <button id="drawDealerBtn" class="btn">Deal to Dealer</button>
+      <button id="logBtn" class="btn">log</button> -->
+      <button id="hitBtn" class="btn">Hit!</button>
+      <button id="stayBtn" class="btn">Stay!</button>
+      <button id="continueBtn" class="btn">Continue</button>
+    </menu>
+    <div id="scoring">
+      <div class="score_card" id="player_score_card">
+        <h3 id="player_score" class="score"><!-- ${playerValue} --></h3>
+        <h4>Player</h4>
+      </div>
+      <div class="score_card" id="dealer_score_card">
+        <h3 id="dealer_score" class="score"><!-- ${dealerValue} --></h3>
+        <h4>Dealer</h4>
+      </div>
+    </div>
+    <div id="main">
+      <div id="player_hand" class="hand">
+        <!-- <img src="${card.image}" alt="${card.value} of ${card.suit}" class="card"> -->
+      </div>
+      <div id="dealer_hand" class="hand">
+        <!-- <img src="${card.image}" alt="${card.value} of ${card.suit}" class="card"> -->
+      </div>
+    </div>
+    <script type="module" src="/js/main.js"></script>
   </body>
 </html>

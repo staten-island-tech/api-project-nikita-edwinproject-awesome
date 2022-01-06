@@ -1,0 +1,139 @@
+@import url(variables.css);
+
+html,
+body,
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 62.5%;
+  font-family: "Lato", sans-serif;
+}
+
+img {
+  width: 12vw;
+}
+
+menu {
+  display: flex;
+  justify-content: center;
+}
+
+h4 {
+  margin-top: 2.7rem;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+#scoring {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2vh;
+}
+
+.score_card {
+  display: inline-block;
+  /* background-color: var(--score-card-color); */
+  margin: 2rem;
+  border-radius: 2rem;
+  height: 8rem;
+  width: 8rem;
+  text-align: center;
+}
+
+#player_score_card {
+  background-color: var(--player-score-color);
+}
+
+#dealer_score_card {
+  background-color: var(--dealer-score-color);
+}
+
+#main {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+}
+
+.hand {
+  display: inline-block;
+}
+
+.btn,
+.btn:link,
+.btn:visited {
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 1.5rem 4rem;
+  /* display: inline-block; */
+  margin: 1rem;
+  font-size: 2rem;
+  border: none;
+  border-radius: 10rem;
+  transition: all 0.2s;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 0.5rem var(--box-shadow-color);
+}
+.btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 0px 0rem var(--box-shadow-color);
+}
+
+#shuffleBtn {
+  display: inline-block;
+}
+
+#hitBtn {
+  display: var(--hit-stay-btns);
+}
+
+#stayBtn {
+  display: var(--hit-stay-btns);
+}
+
+#continueBtn {
+  display: var(--continue-btn);
+}
+
+.score {
+  height: 4rem;
+  margin-bottom: 0;
+}
+
+/* Media Queries */
+
+@media (max-width: 768px) {
+  #main {
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  img {
+    width: 14vw;
+  }
+}
+
+@media (max-width: 425px) {
+  html,
+  body,
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 62.5%;
+    font-family: "Lato", sans-serif;
+  }
+
+  .btn {
+    font-size: 1.25rem;
+    padding: 1.5rem 4rem;
+    margin: 0.5rem;
+  }
+
+  img {
+    width: 23vw;
+  }
+}
