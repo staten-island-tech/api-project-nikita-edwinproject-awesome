@@ -11,15 +11,10 @@
   --toggle-on: rgb(255, 242, 166);
 
   /*Intentions*/
-  --primary: var(--light-blue);
-  --secondary: var(--dark-blue);
   --primary-text-color: var(--black);
   --box-shadow-color: var(--light-box-shadow);
-  --theme-button-color: var(--white);
-  --sale-button-color: var(--white);
-  --stock-button-color: var(--white);
-  --player-score-color: blue;
-  --dealer-score-color: blue;
+  --player-score-color: #94c7e0;
+  --dealer-score-color: #94c7e0;
 
   /*Typography*/
   --h1: 7.594rem;
@@ -45,11 +40,11 @@
 }
 
 .player-win {
-  --player-score-color: green;
+  --player-score-color: #7cc879;
 }
 
 .dealer-win {
-  --dealer-score-color: green;
+  --dealer-score-color: #7cc879;
 }
 
 h1,

@@ -75,7 +75,8 @@ async function keepScore(path) {
           console.log(err);
         }
       });
-      DOMSelectors.playerScore.textContent = playerValue;
+      // DOMSelectors.playerScore.textContent = playerValue;
+      DOMSelectors.playerScore.innerHTML = `<h3>${playerValue}</h3>`;
       if (playerValue == 21 && DOMSelectors.playerHand.children.length === 2) {
         winOrLose("player-win");
       } else if (playerValue > 21) {
@@ -103,7 +104,7 @@ async function keepScore(path) {
           console.log(err);
         }
       });
-      DOMSelectors.dealerScore.textContent = dealerValue;
+      DOMSelectors.dealerScore.innerHTML = `<h3>${dealerValue}</h3>`;
     }
   } catch (err) {
     console.log(err);
