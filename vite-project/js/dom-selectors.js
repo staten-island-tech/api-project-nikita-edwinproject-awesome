@@ -8,6 +8,8 @@ const DOMSelectors = {
   hitBtn: document.getElementById("hitBtn"),
   // logBtn: document.getElementById("logBtn"),
   continueBtn: document.getElementById("continueBtn"),
+  ace1Btn: document.getElementById("ace1"),
+  ace11Btn: document.getElementById("ace11"),
   card: document.querySelector(".card"),
   allCards: document.querySelectorAll(".card"),
   dealerHand: document.getElementById("dealer_hand"),
