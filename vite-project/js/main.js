@@ -230,7 +230,15 @@ async function proceed() {
                   ) {
                     playerValue += 10;
                   } else if (card.value === "ACE") {
-                    playerValue += 11;
+                    if (
+                      DOMSelectors.body.classList.contains(`${card.code}11`)
+                    ) {
+                      playerValue += 11;
+                    } else if (
+                      DOMSelectors.body.classList.contains(`${card.code}1`)
+                    ) {
+                      playerValue += 1;
+                    }
                   } else {
                     playerValue += parseInt(card.value);
                   }
@@ -282,7 +290,11 @@ DOMSelectors.stayBtn.addEventListener("click", async function (event) {
         ) {
           playerValue += 10;
         } else if (card.value === "ACE") {
-          playerValue += 11;
+          if (DOMSelectors.body.classList.contains(`${card.code}11`)) {
+            playerValue += 11;
+          } else if (DOMSelectors.body.classList.contains(`${card.code}1`)) {
+            playerValue += 1;
+          }
         } else {
           playerValue += parseInt(card.value);
         }
@@ -334,7 +346,11 @@ DOMSelectors.hitBtn.addEventListener("click", async function (event) {
         ) {
           playerValue += 10;
         } else if (card.value === "ACE") {
-          playerValue += 11;
+          if (DOMSelectors.body.classList.contains(`${card.code}11`)) {
+            playerValue += 11;
+          } else if (DOMSelectors.body.classList.contains(`${card.code}1`)) {
+            playerValue += 1;
+          }
         } else {
           playerValue += parseInt(card.value);
         }
