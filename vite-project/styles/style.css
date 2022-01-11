@@ -51,12 +51,16 @@ h4 {
 
 #main {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   flex-direction: row;
+  margin-left: 5vw;
+  margin-right: 5vw;
 }
 
 .hand {
-  display: inline-block;
+  display: inline-flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .btn,
@@ -97,9 +101,14 @@ h4 {
   display: var(--continue-btn);
 }
 
+.ace {
+  display: var(--ace-btns);
+}
+
 .score {
   height: 4rem;
-  margin-bottom: 0;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 /* Media Queries */
@@ -114,19 +123,12 @@ h4 {
   img {
     width: 14vw;
   }
+  .hand {
+    margin-bottom: 2rem;
+  }
 }
 
 @media (max-width: 425px) {
-  html,
-  body,
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-size: 62.5%;
-    font-family: "Lato", sans-serif;
-  }
-
   .btn {
     font-size: 1.25rem;
     padding: 1.5rem 4rem;
@@ -135,5 +137,29 @@ h4 {
 
   img {
     width: 23vw;
+  }
+}
+
+@media (max-width: 375px) {
+  html,
+  body,
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 55%;
+    font-family: "Lato", sans-serif;
+  }
+}
+
+@media (max-width: 320px) {
+  html,
+  body,
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 50%;
+    font-family: "Lato", sans-serif;
   }
 }
