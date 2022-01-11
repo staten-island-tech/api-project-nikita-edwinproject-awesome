@@ -33,7 +33,7 @@ async function draw(path, direction) {
               `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card" id="${card.code}">`
             );
           if (card.value === "ACE" && path === "player_hand") {
-            chooseAce(path, null);
+            chooseAce(path, null, card.code);
           } else {
             keepScore(path, null);
           }
@@ -71,7 +71,13 @@ async function keepScore(path, ace) {
           ) {
             playerValue += 10;
           } else if (card.value === "ACE") {
-            playerValue += ace;
+            if (ace != null) {
+              playerValue += ace;
+            } else if (DOMSelectors.body.classList.contains(`${card.code}11`)) {
+              playerValue += 11;
+            } else if (DOMSelectors.body.classList.contains(`${card.code}1`)) {
+              playerValue += 1;
+            }
           } else {
             playerValue += parseInt(card.value);
           }
@@ -120,12 +126,17 @@ function winOrLose(condition) {
   DOMSelectors.body.classList.add("game-over", condition);
 }
 
-async function chooseAce(path, value) {
+async function chooseAce(path, value, code) {
   try {
     DOMSelectors.body.classList.add("choose-ace");
-    if (value != null) {
-      await keepScore(path, value);
-      DOMSelectors.body.classList.remove("choose-ace");
+    if (code != null) {
+      if (value != null) {
+        await keepScore(path, value);
+        DOMSelectors.body.classList.remove("choose-ace");
+        DOMSelectors.body.classList.add(`${code}${value}`);
+        DOMSelectors.main.classList.remove(code);
+      }
+      DOMSelectors.main.classList.add(code);
     }
   } catch (err) {
     console.log(err);
@@ -152,7 +163,15 @@ function shuffle() {
     "game-over",
     "player-win",
     "dealer-win",
-    "choose-ace"
+    "choose-ace",
+    "AS11",
+    "AS1",
+    "AC11",
+    "AC1",
+    "AD11",
+    "AD1",
+    "AH11",
+    "AH1"
   );
   DOMSelectors.body.classList.add("dealing");
 
@@ -333,10 +352,12 @@ DOMSelectors.hitBtn.addEventListener("click", async function (event) {
 
 DOMSelectors.ace11Btn.addEventListener("click", async function (event) {
   event.preventDefault();
-  await chooseAce("player_hand", 11);
+  let code = DOMSelectors.main.classList;
+  await chooseAce("player_hand", 11, code);
 });
 
 DOMSelectors.ace1Btn.addEventListener("click", async function (event) {
   event.preventDefault();
-  await chooseAce("player_hand", 1);
+  let code = DOMSelectors.main.classList;
+  await chooseAce("player_hand", 1, code);
 });
