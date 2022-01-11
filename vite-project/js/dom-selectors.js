@@ -17,7 +17,6 @@ const DOMSelectors = {
   // drawnCards: document.getElementById("drawn_cards"),
   playerScore: document.getElementById("player_score"),
   dealerScore: document.getElementById("dealer_score"),
-  playerScoreValue: document.getElementById("player_score_value").textContent,
 };
 
 export { DOMSelectors };
