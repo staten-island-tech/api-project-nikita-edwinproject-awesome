@@ -32,7 +32,11 @@ async function draw(path, direction) {
               "beforeend",
               `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card" id="${card.code}">`
             );
-          await keepScore(path);
+          if (card.value === "ACE" && path === "player_hand") {
+            chooseAce(path, null, card.code);
+          } else {
+            keepScore(path, null);
+          }
         } else if (direction === "down") {
           document
             .getElementById(path)
@@ -50,7 +54,7 @@ async function draw(path, direction) {
   }
 }
 
-async function keepScore(path) {
+async function keepScore(path, ace) {
   try {
     const list = await fetchApi(
       `${apiLinks.baseURL}/${apiLinks.deck}/pile/${path}/list`
@@ -67,7 +71,13 @@ async function keepScore(path) {
           ) {
             playerValue += 10;
           } else if (card.value === "ACE") {
-            playerValue += 11;
+            if (ace != null) {
+              playerValue += ace;
+            } else if (DOMSelectors.body.classList.contains(`${card.code}11`)) {
+              playerValue += 11;
+            } else if (DOMSelectors.body.classList.contains(`${card.code}1`)) {
+              playerValue += 1;
+            }
           } else {
             playerValue += parseInt(card.value);
           }
@@ -116,6 +126,23 @@ function winOrLose(condition) {
   DOMSelectors.body.classList.add("game-over", condition);
 }
 
+async function chooseAce(path, value, code) {
+  try {
+    DOMSelectors.body.classList.add("choose-ace");
+    if (code != null) {
+      if (value != null) {
+        await keepScore(path, value);
+        DOMSelectors.body.classList.remove("choose-ace");
+        DOMSelectors.body.classList.add(`${code}${value}`);
+        DOMSelectors.main.classList.remove(code);
+      }
+      DOMSelectors.main.classList.add(code);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 function shuffle() {
   const divs = ["player_hand", "dealer_hand"];
 
@@ -135,7 +162,16 @@ function shuffle() {
     "hit-stay",
     "game-over",
     "player-win",
-    "dealer-win"
+    "dealer-win",
+    "choose-ace",
+    "AS11",
+    "AS1",
+    "AC11",
+    "AC1",
+    "AD11",
+    "AD1",
+    "AH11",
+    "AH1"
   );
   DOMSelectors.body.classList.add("dealing");
 
@@ -194,7 +230,15 @@ async function proceed() {
                   ) {
                     playerValue += 10;
                   } else if (card.value === "ACE") {
-                    playerValue += 11;
+                    if (
+                      DOMSelectors.body.classList.contains(`${card.code}11`)
+                    ) {
+                      playerValue += 11;
+                    } else if (
+                      DOMSelectors.body.classList.contains(`${card.code}1`)
+                    ) {
+                      playerValue += 1;
+                    }
                   } else {
                     playerValue += parseInt(card.value);
                   }
@@ -228,29 +272,6 @@ DOMSelectors.shuffleBtn.addEventListener("click", function (event) {
   shuffle();
 });
 
-/* DOMSelectors.drawPlayerBtn.addEventListener("click", function (event) {
-  event.preventDefault();
-  if (!DOMSelectors.body.classList.contains("stay")) {
-    draw("player_hand");
-  }
-});
-
-DOMSelectors.drawDealerBtn.addEventListener("click", function (event) {
-  event.preventDefault();
-  if (DOMSelectors.dealerHand.children.length === 1) {
-    draw("dealer_hand", "down");
-  } else {
-    draw("dealer_hand");
-  }
-});
-
-DOMSelectors.logBtn.addEventListener("click", function (event) {
-  event.preventDefault();
-  fetchApi(`${apiLinks.baseURL}/${apiLinks.deck}/${apiLinks.listPlayerCards}`);
-  // await dealBlackJack();
-  // await transferToDealer();
-}); */
-
 DOMSelectors.stayBtn.addEventListener("click", async function (event) {
   try {
     event.preventDefault();
@@ -269,7 +290,11 @@ DOMSelectors.stayBtn.addEventListener("click", async function (event) {
         ) {
           playerValue += 10;
         } else if (card.value === "ACE") {
-          playerValue += 11;
+          if (DOMSelectors.body.classList.contains(`${card.code}11`)) {
+            playerValue += 11;
+          } else if (DOMSelectors.body.classList.contains(`${card.code}1`)) {
+            playerValue += 1;
+          }
         } else {
           playerValue += parseInt(card.value);
         }
@@ -291,7 +316,7 @@ DOMSelectors.stayBtn.addEventListener("click", async function (event) {
           "beforeend",
           `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card" id="${card.code}">`
         );
-        await keepScore("dealer_hand");
+        await keepScore("dealer_hand", null);
       });
       proceed();
     }
@@ -321,7 +346,11 @@ DOMSelectors.hitBtn.addEventListener("click", async function (event) {
         ) {
           playerValue += 10;
         } else if (card.value === "ACE") {
-          playerValue += 11;
+          if (DOMSelectors.body.classList.contains(`${card.code}11`)) {
+            playerValue += 11;
+          } else if (DOMSelectors.body.classList.contains(`${card.code}1`)) {
+            playerValue += 1;
+          }
         } else {
           playerValue += parseInt(card.value);
         }
@@ -337,16 +366,14 @@ DOMSelectors.hitBtn.addEventListener("click", async function (event) {
   }
 });
 
-/* function greet(name) {
-  const greetPromise = new Promise(function (resolve, reject) {
-    resolve(`hello ${name}`);
-  });
-  return greetPromise;
-}
-
-const suzie = greet("Suzie");
-
-suzie.then((result) => {
-  console.log(result);
+DOMSelectors.ace11Btn.addEventListener("click", async function (event) {
+  event.preventDefault();
+  let code = DOMSelectors.main.classList;
+  await chooseAce("player_hand", 11, code);
 });
- */
+
+DOMSelectors.ace1Btn.addEventListener("click", async function (event) {
+  event.preventDefault();
+  let code = DOMSelectors.main.classList;
+  await chooseAce("player_hand", 1, code);
+});

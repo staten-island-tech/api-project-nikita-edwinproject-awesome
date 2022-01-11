@@ -27,16 +27,25 @@
 .dealing {
   --continue-btn: inline-block;
   --hit-stay-btns: none;
+  --ace-btns: none;
 }
 
 .stay {
   --continue-btn: inline-block;
   --hit-stay-btns: none;
+  --ace-btns: none;
 }
 
 .hit-stay {
   --continue-btn: none;
   --hit-stay-btns: inline-block;
+  --ace-btns: none;
+}
+
+.choose-ace {
+  --continue-btn: none;
+  --hit-stay-btns: none;
+  --ace-btns: inline-block;
 }
 
 .player-win {

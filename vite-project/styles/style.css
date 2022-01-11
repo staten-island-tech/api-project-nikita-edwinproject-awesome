@@ -58,7 +58,9 @@ h4 {
 }
 
 .hand {
-  display: inline-block;
+  display: inline-flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .btn,
@@ -99,6 +101,10 @@ h4 {
   display: var(--continue-btn);
 }
 
+.ace {
+  display: var(--ace-btns);
+}
+
 .score {
   height: 4rem;
   margin-top: 2rem;
@@ -116,6 +122,9 @@ h4 {
 
   img {
     width: 14vw;
+  }
+  .hand {
+    margin-bottom: 2rem;
   }
 }
 
