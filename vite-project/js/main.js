@@ -377,3 +377,5 @@ DOMSelectors.ace1Btn.addEventListener("click", async function (event) {
   let code = DOMSelectors.main.classList;
   await chooseAce("player_hand", 1, code);
 });
+
+export { fetchApi };
