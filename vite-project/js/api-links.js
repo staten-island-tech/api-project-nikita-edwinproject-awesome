@@ -1,3 +1,5 @@
+import { fetchApi } from "./main";
+
 const apiLinks = {
   baseURL: "https://deckofcardsapi.com/api/deck",
   deck: "gdh738kbjx9v", // this should remain relatively dynamic
@@ -11,5 +13,18 @@ const apiLinks = {
   shuffle: "shuffle",
   shuffleRemaining: "shuffle/?remaining=true",
 };
+
+async function newId() {
+  try {
+    const data = await fetchApi(
+      "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1"
+    );
+    apiLinks.deck = data.deck_id;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+newId();
 
 export { apiLinks }; // in main.js, use these values in `` to create the links easier
